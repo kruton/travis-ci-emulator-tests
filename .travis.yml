@@ -1,10 +1,14 @@
-sudo: required
-dist: precise
+sudo: true
 language: android
 
 jdk:
   - oraclejdk8
 
+env:
+  global:
+    - ANDROID_TOOLS_URL="https://dl.google.com/android/repository/tools_r25.2.3-linux.zip"
+    - ANDROID_NDK_HOME="$ANDROID_HOME/ndk-bundle"
+    
 android:
   components:
     - tools
@@ -18,22 +22,31 @@ android:
 
 env:
   matrix:
-    - API=android-15 ABI=armeabi-v7a
-    - API=android-16 ABI=armeabi-v7a
-    - API=android-17 ABI=armeabi-v7a
-    - API=android-18 ABI=armeabi-v7a
-    - API=android-19 ABI=armeabi-v7a
-    - API=android-21 ABI=armeabi-v7a
-    - API=android-22 ABI=armeabi-v7a
-    - API=android-23 ABI=armeabi-v7a
-    - API=android-24 ABI=armeabi-v7a
-    - API=android-24 ABI=arm64-v8a
+    - API=android-15 ABI=armeabi-v7a TYPE=default
+    - API=android-16 ABI=armeabi-v7a TYPE=default
+    - API=android-17 ABI=armeabi-v7a TYPE=default
+    - API=android-18 ABI=armeabi-v7a TYPE=default
+    - API=android-19 ABI=armeabi-v7a TYPE=default
+    - API=android-21 ABI=armeabi-v7a TYPE=default
+    - API=android-22 ABI=armeabi-v7a TYPE=default
+    - API=android-23 ABI=armeabi-v7a TYPE=default
+    - API=android-24 ABI=armeabi-v7a TYPE=default
+    - API=android-24 ABI=arm64-v8a TYPE=default
 
 # Emulator Management: Create, Start and Wait
 before_script:
-  - android-update-sdk --components=sys-img-$ABI-$API --accept-licenses='android-sdk-license-[0-9a-f]{8}'
-  - echo no | android create avd --force -n test -t $API --abi $ABI
-  - emulator -avd test -no-audio -no-window -no-boot-anim -memory 1536 &
+  # Install Android stuff
+  - curl -L $ANDROID_TOOLS_URL -o $HOME/tools.zip
+  - unzip -oq $HOME/tools.zip -d $ANDROID_HOME
+  - mkdir $ANDROID_HOME/licenses
+  - echo -ne "\n8933bad161af4178b1185d1a37fbf41ea5269c55\nd56f5187479451eabf01fb78af6dfcb131a6481e" >> $ANDROID_HOME/licenses/android-sdk-license
+  - echo -ne "\n84831b9409646a918e30573bab4c9c91346d8abd\n504667f4c0de7af1a06de9f4b1727b84351f2910" >> $ANDROID_HOME/licenses/android-sdk-preview-license
+  - touch $HOME/.android/repositories.cfg
+  - $ANDROID_HOME/tools/bin/sdkmanager tools > /dev/null
+  - $ANDROID_HOME/tools/bin/sdkmanager platform-tools > /dev/null
+  - $ANDROID_HOME/tools/bin/sdkmanager 'emulator' > /dev/null
+  - $ANDROID_HOME/tools/bin/sdkmanager "system-images;$API;$TYPE;$ABI" > /dev/null
+  - $ANDROID_HOME/tools/bin/avdmanager create avd --force --name test --package "system-images;$API;$TYPE;$ABI" --abi $ABI --device 'Nexus 4' --memory 1536 --sdcard 128M
   - android-wait-for-emulator
   - adb shell input keyevent 82 &
 
