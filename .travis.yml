@@ -8,8 +8,6 @@ env:
   global:
     - ANDROID_TOOLS_URL="https://dl.google.com/android/repository/tools_r25.2.3-linux.zip"
     - ANDROID_NDK_HOME="$ANDROID_HOME/ndk-bundle"
-
-env:
   matrix:
     - API=android-15 ABI=armeabi-v7a TYPE=default
     - API=android-16 ABI=armeabi-v7a TYPE=default
@@ -21,6 +19,8 @@ env:
     - API=android-23 ABI=armeabi-v7a TYPE=default
     - API=android-24 ABI=armeabi-v7a TYPE=default
     - API=android-24 ABI=arm64-v8a TYPE=default
+    - API=android-25 ABI=armeabi-v7a TYPE=google_apis
+    - API=android-25 ABI=arm64-v8a TYPE=google_apis
 
 # Emulator Management: Create, Start and Wait
 before_script:
