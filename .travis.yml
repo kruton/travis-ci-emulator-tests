@@ -35,8 +35,8 @@ before_script:
   - $ANDROID_HOME/tools/bin/sdkmanager platform-tools > /dev/null
   - $ANDROID_HOME/tools/bin/sdkmanager 'emulator' > /dev/null
   - $ANDROID_HOME/tools/bin/sdkmanager "system-images;$API;$TYPE;$ABI" > /dev/null
-  - $ANDROID_HOME/tools/bin/avdmanager create avd --force --name test --package "system-images;$API;$TYPE;$ABI" --abi $ABI --device 'Nexus 4' --sdcard 128M > /dev/null
-  - sleep 30
+  - $ANDROID_HOME/tools/bin/avdmanager create avd --force --name test --package "system-images;$API;$TYPE;$ABI" --abi $ABI --device 'Nexus 4' --sdcard 128M
+  - $ANDROID_HOME/emulator/emulator -avd test -skin 768x1280 -no-audio -no-window -no-boot-anim -memory 1536 &
   - android-wait-for-emulator
   - adb shell input keyevent 82 &
 
