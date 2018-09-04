@@ -8,17 +8,6 @@ env:
   global:
     - ANDROID_TOOLS_URL="https://dl.google.com/android/repository/tools_r25.2.3-linux.zip"
     - ANDROID_NDK_HOME="$ANDROID_HOME/ndk-bundle"
-    
-android:
-  components:
-    - tools
-    - platform-tools
-    - tools
-    - android-22
-    - android-24
-    - android-25
-    - build-tools-28.0.2
-    - extra-android-m2repository
 
 env:
   matrix:
